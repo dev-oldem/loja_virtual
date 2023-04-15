@@ -9,6 +9,7 @@ create table loja (
     email varchar (255) not null,
     numero_telefone int (13) not null
     );
+desc loja;
 
 create table cliente (
     id_cliente int AUTO_INCREMENT primary key,
@@ -20,9 +21,10 @@ create table cliente (
     tipo_telefone enum ('Fixo','Whatsapp','Celular') not null,
     numero_telefone int (13) not null
 );
+desc cliente;
 
 create table endereco (
-    id_endereco int AUTO_INCREMENT primary key;
+    id_endereco int AUTO_INCREMENT primary key,
     tipo_endereco enum ('cadastro','entrega') not null,
     logradouro varchar (255) not null,
     numero int (5) not null,
@@ -30,28 +32,32 @@ create table endereco (
     cep int (8) not null,
     bairro varchar (255) not null,
     municipio varchar (255) not null,
-    uf_estado char (2) not null,
+    uf_estado char (2) not null
 );
+desc endereco;
 
 create table rel_endereco_loja (
     fk_endereco int,
     fk_loja int,
-    foreign key (fk_endereco) references (id_loja),
-    foreign key (fk_loja) references (id_endereco)
+    foreign key (fk_endereco) references endereco(id_endereco),
+    foreign key (fk_loja) references loja(id_loja)
 );
+desc rel_endereco_loja;
 
 create table rel_endereco_cliente (
     fk_endereco int,
     fk_cliente int,
-    foreign key (fk_endereco) references (id_cliente),
-    foreign key (fk_cliente) references (id_endereco)
+    foreign key (fk_endereco) references endereco(id_endereco),
+    foreign key (fk_cliente) references cliente(id_cliente)
 );
+desc rel_endereco_cliente;
 
 create table produto (
     id_produto int AUTO_INCREMENT primary key,
     genero_produto enum ('Masculino','Feminino') not null,
     tipo_produto enum ('Tênis','Camiseta de Time') not null
 );
+desc produto;
 
 create table tenis (
     id_tenis int AUTO_INCREMENT primary key,
@@ -64,13 +70,15 @@ create table tenis (
     categoria enum ('Casual','Caminhada','Corrida') not null,
     pisada enum ('Neutra','Pronada','Supinada') not null
 );
+desc tenis;
 
 create table rel_produto_tenis (
     fk_tenis int,
     fk_produto int,
-    foreign key (fk_tenis) references (id_produto),
-    foreign key (fk_produto) references (id_tenis)
+    foreign key (fk_tenis) references tenis(id_tenis),
+    foreign key (fk_produto) references produto(id_produto)
 );
+desc rel_produto_tenis;
 
 create table camiseta_time (
     id_camiseta_time int AUTO_INCREMENT primary key,
@@ -81,15 +89,45 @@ create table camiseta_time (
     preco_unit float not null,
     tamanho enum ('P','M','G','GG','EGG') not null
 );
+desc camiseta_time;
 
 create table rel_produto_camiseta_time (
     fk_camiseta_time int,
     fk_produto int,
-    foreign key (fk_camiseta_time) references (id_produto),
-    foreign key (fk_produto) references (id_camiseta_time)
+    foreign key (fk_camiseta_time) references camiseta_time(id_camiseta_time),
+    foreign key (fk_produto) references produto(id_produto)
 );
+desc rel_produto_camiseta_time;
 
 INSERT INTO loja (cnpj,razao_social,nome_fantasia,email,numero_telefone) 
 VALUES
-(11111111111111, 'AGGB LTDA', 'LOJA VIRTUAL AGGB','contato@aggb.com.br',554333382222),
-(22222222222222, 'GRO LTDA', 'LOJA VIRTUAL GRO','contato@gro.com.br',554333382222);
+(111111111, 'AGGB LTDA','LOJA VIRTUAL AGGB','contato@aggb.com.br', 33382222),
+(222222222, 'GRO LTDA', 'LOJA VIRTUAL GRO','contato@gro.com.br', 33382222);
+select * from loja;
+
+insert into cliente (nome_completo, data_nascimento,cpf,sexo,email,tipo_telefone,numero_telefone)
+VALUES
+('Michel',31101991,11111111,'Masculino','michel@gmail.com','Whatsapp',9999999),
+('João',31101991,22222222,'Masculino','joao@gmail.com','Fixo',888888),
+('Maria',31101991,33333333,'Feminino','maria@gmail.com','Celular',55555555),
+('Jair',31101991,44444444,'Masculino','jair@gmail.com','Fixo',12121212),
+('Tobias',31101991,55555555,'Masculino','tobias@gmail.com','Whatsapp',7777777);
+select * from cliente;
+
+insert into tenis (nome,marca,cor,preco_unit,tamanho,material,categoria,pisada)
+VALUES
+('Tenis Nike LeBron','Nike','Preto',599.90,'41','algodão','Casual','Neutra'),
+('Tenis Adidas Ultraboost','Adidas','Branco',999.90,'38','nylon','Corrida','Pronada'),
+('Tenis Adidas Ultraboost','Adidas','Preto',999.90,'40','nylon','Corrida','Supinada'),
+('Tenis Under Armour The Rock','Under Armour','Verde e Azul',350.49,'43','nylon','Caminhada','Pronada'),
+('Tenis Timberland Trail Dust','Timberland','Marrom',259.50,'42','couro','Casual','Pronada');
+select * from tenis;
+
+insert into camiseta_time (nome,marca,nome_time,cor,preco_unit,tamanho)
+VALUES
+ ('Camiseta comemoração título brasileiro 2021','Nike','Palmeiras','Verde',179.50,'M'),
+ ('Camiseta 100 anos','Adidas','Corinthians','Preto',299.90,'G'),
+ ('Camiseta de treino ano 2022','Nike','Flamengo','Vermelho',320.00,'G'),
+ ('Camiseta oficial jogos Brasileirão','Nike','Palmeiras','Branca',225.50,'P'),
+ ('Camiseta número 9 Ronaldo','Nike','Corinthians','Preto',199.90,'P'); 
+select * from camiseta_time;
